@@ -1,0 +1,48 @@
+
+using { /Fortnite.com/Devices }
+using { /Verse.org/Simulation }
+using { /UnrealEngine.com/Temporary/Diagnostics }
+using { /Fortnite.com/Game }
+using { /Fortnite.com/Characters }
+using { /Fortnite.com/Playspaces }
+using { /Verse.org/Verse }
+using { /Verse.org/Native }
+using { /Verse.org/Random }
+using { /UnrealEngine.com/Temporary/SpatialMath }
+using { /Fortnite.com/Teams }
+using { /Verse.org/Simulation }
+
+# See https://dev.epicgames.com/documentation/en-us/uefn/create-your-own-device-in-verse for how to create a verse device.
+
+# A Verse-authored creative device that can be placed in a level
+recul_arme := class(creative_device):
+    var Players : []player = array{}
+    @editable BaseProp : fuel_pump_device = fuel_pump_device{}
+    @editable Knockback:explosive_device = explosive_device {}
+    @editable Knockback1 : movement_modulator_device = movement_modulator_device{}
+
+
+    HandlePlayerHit(DamageResult : damage_result) : void =
+        Target := DamageResult.Target
+        Amount := DamageResult.Amount
+        
+        if (FortCharacterWhoWasHit := fort_character[Target],AgentTouche := FortCharacterWhoWasHit.GetAgent[],Basepos := BaseProp.GetTransform().Translation,Baserot:=BaseProp.GetTransform().Rotation,zp:= Knockback1.TeleportTo[Basepos,Baserot]):
+            if (Instigator := DamageResult.Instigator?,Agent := Instigator.GetInstigatorAgent[], FortCharacterInstigator := Agent.GetFortCharacter[]):
+                Print("Touche")
+                if (Pos := FortCharacterWhoWasHit.GetTransform().Translation,Rot := FortCharacterInstigator.GetTransform().Rotation,tp := Knockback1.TeleportTo[Pos,Rot]):
+                    Print("violence1")
+                    tp
+                    zp
+            Print("Was hit for {Amount}")
+            Print("violence2")
+            #Knockback1.Activate(AgentTouche)
+            Knockback.Reset()
+             
+        
+    OnBegin<override>()<suspends>:void=
+        set Players = GetPlayspace().GetPlayers()
+            
+        for (elt : Players, FortCharacter := elt.GetFortCharacter[]):
+            FortCharacter.DamagedEvent().Subscribe(HandlePlayerHit)
+
+        
