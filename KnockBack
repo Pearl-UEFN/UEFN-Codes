@@ -1,4 +1,3 @@
-
 using { /Fortnite.com/Devices }
 using { /Verse.org/Simulation }
 using { /UnrealEngine.com/Temporary/Diagnostics }
@@ -18,7 +17,6 @@ using { /Verse.org/Simulation }
 recul_arme := class(creative_device):
     var Players : []player = array{}
     @editable BaseProp : fuel_pump_device = fuel_pump_device{}
-    @editable Knockback:explosive_device = explosive_device {}
     @editable Knockback1 : movement_modulator_device = movement_modulator_device{}
 
 
@@ -26,17 +24,11 @@ recul_arme := class(creative_device):
         Target := DamageResult.Target
         Amount := DamageResult.Amount
         
-        if (FortCharacterWhoWasHit := fort_character[Target],AgentTouche := FortCharacterWhoWasHit.GetAgent[],Basepos := BaseProp.GetTransform().Translation,Baserot:=BaseProp.GetTransform().Rotation,zp:= Knockback1.TeleportTo[Basepos,Baserot]):
+        if (FortCharacterWhoWasHit := fort_character[Target],AgentTouche := FortCharacterWhoWasHit.GetAgent[],Basepos := BaseProp.GetTransform().Translation):
             if (Instigator := DamageResult.Instigator?,Agent := Instigator.GetInstigatorAgent[], FortCharacterInstigator := Agent.GetFortCharacter[]):
-                Print("Touche")
-                if (Pos := FortCharacterWhoWasHit.GetTransform().Translation,Rot := FortCharacterInstigator.GetTransform().Rotation,tp := Knockback1.TeleportTo[Pos,Rot]):
-                    Print("violence1")
+                if (Pos := FortCharacterWhoWasHit.GetTransform().Translation,Rot := FortCharacterInstigator.GetTransform().Rotation,tp := Knockback1.TeleportTo[Basepos,Rot]):
                     tp
-                    zp
-            Print("Was hit for {Amount}")
-            Print("violence2")
-            #Knockback1.Activate(AgentTouche)
-            Knockback.Reset()
+                    Knockback1.Activate(AgentTouche)
              
         
     OnBegin<override>()<suspends>:void=
@@ -44,5 +36,4 @@ recul_arme := class(creative_device):
             
         for (elt : Players, FortCharacter := elt.GetFortCharacter[]):
             FortCharacter.DamagedEvent().Subscribe(HandlePlayerHit)
-
         
