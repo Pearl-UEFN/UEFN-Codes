@@ -1,0 +1,79 @@
+using { /Fortnite.com/Devices }
+using { /Verse.org/Simulation }
+using { /UnrealEngine.com/Temporary/Diagnostics }
+using { /Fortnite.com/Game }
+using { /Fortnite.com/Characters }
+using { /Fortnite.com/Playspaces }
+using { /Verse.org/Verse }
+using { /Verse.org/Native }
+using { /Verse.org/Random }
+using { /UnrealEngine.com/Temporary/SpatialMath }
+using { /Fortnite.com/Teams }
+using { /Verse.org/Simulation }
+
+# See https://dev.epicgames.com/documentation/en-us/uefn/create-your-own-device-in-verse for how to create a verse device.
+
+# A Verse-authored creative device that can be placed in a level
+hello_world_device := class(creative_device):
+    
+    var Players : []player = array{}
+    
+
+    RandomArrayInt()<suspends> : []int =
+        Print("yes")
+        var NumberArray : []int = array{}
+        var Array : []int = array {}
+        var index :int = 0
+        var CheckNbArray : int = 0
+        var RandomNb : int = 31234
+        set Players = GetPlayspace().GetPlayers()
+        NbPlayers := Players.Length
+        loop:
+            Sleep(0.001)
+            if (index = NbPlayers+2):
+                Sleep(2.0)
+                #Print("Index = nb layers")
+                for (elt : NumberArray):
+                    #Print("Le tableau est {elt}")
+                return NumberArray
+            else:
+                set RandomNb = GetRandomInt(0,NbPlayers + 1)
+                set CheckNbArray = 0
+                #Print("Nombre Random : {RandomNb}")
+                for (elt : NumberArray):
+                    #Print("Array Now : {elt}")
+                    if (elt = RandomNb):
+                        set CheckNbArray = 1
+                        #Print("Number Already in array !")
+                    else:
+                        #Print("Number Random diff elt ")
+
+                if (CheckNbArray = 1):
+                    #Print("Number Already in array ! Cant add it")
+                else :
+                    set Array = array{RandomNb}
+                    set NumberArray = NumberArray + Array
+                    set index = index + 1
+                    #Print("Element ajoute")
+                    for (elt : NumberArray):
+                        #Print("Array Nb : {elt}")
+            #Print("Index : {index}")
+
+    PrintArray( Array : []int): void=
+        var index : int = 0
+        Print("[")
+        for (elt : Array):
+            Print("{elt} ,")
+        Print("]")
+            
+
+
+
+        
+
+
+
+    OnBegin<override>()<suspends>:void=
+        Print("2 + 2 = {2 + 2}")
+        Order := RandomArrayInt()
+        PrintArray(Order)
